@@ -66,7 +66,7 @@ class Auth extends BaseController
                 ];
 
                 if ($model->insert($data)) {
-                    return redirect()->to('/login')->with('success', 'Usuario registrado correctamente.');
+                    return redirect()->to('/register')->with('success', 'Usuario registrado correctamente.');
                 } else {
                     session()->setFlashdata('error', 'Error al registrar el usuario.');
                 }
@@ -101,7 +101,7 @@ class Auth extends BaseController
                 ];
 
                 if ($model->insert($data)) {
-                    return redirect()->to('/login')->with('success', 'Usuario registrado correctamente.');
+                    return redirect()->to('/register')->with('success', 'Usuario registrado correctamente.');
                 } else {
                     session()->setFlashdata('error', 'Error al registrar el usuario.');
                 }
@@ -115,30 +115,19 @@ class Auth extends BaseController
 
      public function crear_usuario()
     {
-        if (!session()->get('isLoggedIn') || session()->get('rol') !== 'administrador') {
+        if (!session()->get('isLoggedIn') ||!in_array(session()->get('rol'), ['supervisor', 'administrador'])) {
             return redirect()->to('dashboard')->with('error', 'Acceso denegado.');
         }
-
+        $usuarioModel = new UsuarioModel();
+        $data = ['nombre' => session()->get('nombre'), 'rol' => session()->get('rol'), 'usuarios' => $usuarioModel->findAll()];
         if ($this->request->is('post')) {
-            $rules = [
-                'nombre' => 'required|min_length[3]',
-                'correo' => 'required|valid_email|is_unique[usuarios.correo]',
-                'contrasena' => 'required|min_length[8]',
-                'rol' => 'required|in_list[cliente,agente,supervisor,administrador]'
-            ];
-
+            $rules = ['nombre' => 'required|min_length[3]', 'correo' => 'required|valid_email|is_unique[usuarios.correo]', 'contrasena' => 'required|min_length[8]', 'rol' => 'required|in_list[cliente,agente,supervisor,administrador]'];
             if ($this->validate($rules)) {
                 $model = new UsuarioModel();
-                $data = [
-                    'nombre' => $this->request->getPost('nombre'),
-                    'correo' => $this->request->getPost('correo'),
-                    'contrasena' => password_hash($this->request->getPost('contrasena'), PASSWORD_BCRYPT),
-                    'rol' => $this->request->getPost('rol')
-                ];
-
+                $data = ['nombre' => $this->request->getPost('nombre'), 'correo' => $this->request->getPost('correo'), 'contrasena' => password_hash($this->request->getPost('contrasena'), PASSWORD_BCRYPT), 'rol' => $this->request->getPost('rol'), 'creado_en' => date('Y-m-d H:i:s')];
                 if ($model->insert($data)) {
                     session()->setFlashdata('success', 'Usuario creado correctamente.');
-                    return redirect()->to('dashboard');
+                    return redirect()->to('crear_usuario');
                 } else {
                     session()->setFlashdata('error', 'Error al crear el usuario.');
                 }
@@ -146,8 +135,64 @@ class Auth extends BaseController
                 session()->setFlashdata('error', $this->validator->listErrors());
             }
         }
+        return view('auth/crear_usuario', $data);
+    }
 
-        return redirect()->to('dashboard');
+    public function editar_usuario($id)
+    {
+        if (!session()->get('isLoggedIn') || session()->get('rol') !== 'administrador') {
+            return redirect()->to('dashboard')->with('error', 'Acceso denegado.');
+        }
+
+        $model = new UsuarioModel();
+        $usuario = $model->find($id);
+
+        if (!$usuario) {
+            return redirect()->to('crear_usuario')->with('error', 'Usuario no encontrado.');
+        }
+
+        if ($this->request->is('post')) {
+            $rules = ['nombre' => 'required|min_length[3]', 'correo' => 'required|valid_email|is_unique[usuarios.correo,id,' . $id . ']', 'contrasena' => 'permit_empty|min_length[8]', 'rol' => 'required|in_list[cliente,agente,supervisor,administrador]'];
+            if ($this->validate($rules)) {
+                $data = ['nombre' => $this->request->getPost('nombre'), 'correo' => $this->request->getPost('correo'), 'rol' => $this->request->getPost('rol')];
+                if ($this->request->getPost('contrasena')) {
+                    $data['contrasena'] = password_hash($this->request->getPost('contrasena'), PASSWORD_BCRYPT);
+                }
+                if ($model->update($id, $data)) {
+                    session()->setFlashdata('success', 'Usuario actualizado correctamente.');
+                    return redirect()->to('crear_usuario');
+                } else {
+                    session()->setFlashdata('error', 'Error al actualizar el usuario.');
+                }
+            } else {
+                session()->setFlashdata('error', $this->validator->listErrors());
+            }
+        }
+
+        // Prellenar el formulario modal (esto se hace vía JavaScript en la vista)
+        return redirect()->to('crear_usuario');
+    }
+
+    public function eliminar_usuario($id)
+    {
+        if (!session()->get('isLoggedIn') || session()->get('rol') !== 'administrador') {
+            return redirect()->to('crear_usuario')->with('error', 'Acceso denegado.');
+        }
+
+        $model = new UsuarioModel();
+        $usuario = $model->find($id);
+
+        if (!$usuario) {
+            return redirect()->to('crear_usuario')->with('error', 'Usuario no encontrado.');
+        }
+
+        if ($model->delete($id)) {
+            session()->setFlashdata('success', 'Usuario eliminado correctamente.');
+        } else {
+            session()->setFlashdata('error', 'Error al eliminar el usuario.');
+        }
+
+        return redirect()->to('crear_usuario');
     }
 
     public function dashboard()
@@ -158,11 +203,12 @@ class Auth extends BaseController
 
         $data = [
             'nombre' => session()->get('nombre'),
-            'rol' => session()->get('rol')
+            'rol' => session()->get('rol'),  
         ];
 
         return view('auth/dashboard', $data);
     }
+
 
    public function tickets()
     {
@@ -202,11 +248,18 @@ class Auth extends BaseController
         return view('auth/tickets', $data);
     }
 
-    public function crear_ticket()
+   public function crear_ticket()
     {
         if (!session()->get('isLoggedIn') || !in_array(session()->get('rol'), ['cliente', 'administrador'])) {
             return redirect()->to('tickets')->with('error', 'Acceso denegado.');
         }
+
+        $ticketModel = new TicketModel();
+        $data = [
+            'nombre' => session()->get('nombre'),
+            'rol' => session()->get('rol'),
+            'categorias' => $ticketModel->getCategorias()
+        ];
 
         if ($this->request->is('post')) {
             $rules = [
@@ -231,7 +284,7 @@ class Auth extends BaseController
                     'id' => $ticket_id,
                     'id_usuario' => $user_id,
                     'titulo' => $this->request->getPost('titulo'),
-                    'descripcion' => $this->request->getPost('descripcion'),
+                    'descripcion' => html_entity_decode($this->request->getPost('descripcion')), // Preservar HTML
                     'prioridad' => $this->request->getPost('prioridad'),
                     'id_categoria' => $id_categoria,
                     'estado' => 'abierto'
@@ -240,19 +293,16 @@ class Auth extends BaseController
                 // Insertar ticket
                 try {
                     if ($ticketModel->insert($ticketData)) {
-                        // Crear comentario inicial
-                        $comentarioData = [
-                            'id_ticket' => $ticket_id,
-                            'id_usuario' => $user_id,
-                            'comentario' => $ticketData['descripcion'],
-                            'es_interno' => 0
-                        ];
-
-                        $comentario_id = $ticketModel->addComentario($comentarioData);
-
                         // Manejar adjuntos (si los hay)
                         $files = $this->request->getFiles();
                         if ($files && isset($files['adjuntos']) && !empty($files['adjuntos'])) {
+                            $comentario_id = $ticketModel->addComentario([
+                                'id_ticket' => $ticket_id,
+                                'id_usuario' => $user_id,
+                                'comentario' => '', // Comentario vacío o elimina esta línea si no quieres comentarios
+                                'es_interno' => 0
+                            ]);
+
                             foreach ($files['adjuntos'] as $file) {
                                 if ($file->isValid() && !$file->hasMoved()) {
                                     $newName = $file->getRandomName();
@@ -295,7 +345,32 @@ class Auth extends BaseController
             }
         }
 
-        return redirect()->to('tickets');
+        return view('auth/crear_ticket', $data);
+    }
+
+    public function guardar_borrador()
+    {
+        if (!$this->request->is('post')) {
+            return redirect()->to('editor');
+        }
+
+        $data = [
+            'titulo' => $this->request->getPost('titulo'),
+            'descripcion' => $this->request->getPost('descripcion'),
+            'prioridad' => $this->request->getPost('prioridad'),
+            'categoria_nombre' => $this->request->getPost('categoria_nombre'),
+            'usuario_id' => session()->get('user_id'),
+            'estado' => 'borrador'
+        ];
+
+        $ticketModel = new \App\Models\TicketModel();
+        if ($ticketModel->save($data)) {
+            session()->setFlashdata('success', 'Borrador guardado exitosamente.');
+        } else {
+            session()->setFlashdata('error', 'Error al guardar el borrador.');
+        }
+
+       return view('auth/crear_ticket', $data);
     }
 
     public function ver_ticket($ticket_id)
@@ -328,23 +403,7 @@ class Auth extends BaseController
                     'comentario' => $this->request->getPost('comentario'),
                     'es_interno' => $es_interno
                 ];
-
-                if ($ticketModel->addComentario($comentarioData)) {
-                    // Registrar en auditoría
-                    $db = \Config\Database::connect();
-                    $db->table('registros_auditoria')->insert([
-                        'id_usuario' => $user_id,
-                        'accion' => 'añadir_comentario',
-                        'modelo' => 'comentarios_tickets',
-                        'id_registro' => $ticket_id,
-                        'detalles' => json_encode($comentarioData),
-                        'direccion_ip' => $this->request->getIPAddress()
-                    ]);
-                    session()->setFlashdata('success', 'Comentario enviado.');
-                } else {
-                    session()->setFlashdata('error', 'Error al enviar el comentario.');
-                }
-                return redirect()->to("ver_ticket/$ticket_id");
+                
             } else {
                 session()->setFlashdata('error', $this->validator->listErrors());
             }

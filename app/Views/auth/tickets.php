@@ -62,16 +62,16 @@
             </div>
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
-                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="true">
                         <li class="nav-item">
                             <a href="<?php echo base_url('dashboard'); ?>" class="nav-link">
                                 <i class="nav-icon bi bi-speedometer"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <?php if ($rol === 'administrador'): ?>
+                        <?php if ($rol === 'administrador'|| $rol === 'supervisor'): ?>
                         <li class="nav-item">
-                            <a href="<?php echo base_url('registroA'); ?>" class="nav-link">
+                            <a href="<?php echo base_url('crear_usuario'); ?>" class="nav-link">
                                 <i class="nav-icon bi bi-person-fill"></i>
                                 <p>Gestionar Usuarios</p>
                             </a>
@@ -111,66 +111,11 @@
             <div class="app-content">
                 <div class="container-fluid">
                     <!-- Flash Messages -->
-                    <?php if (session()->getFlashdata('success')): ?>
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            <?php echo session()->getFlashdata('success'); ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (session()->getFlashdata('error')): ?>
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            <?php echo session()->getFlashdata('error'); ?>
-                        </div>
-                    <?php endif; ?>
-                    <!-- Crear Ticket -->
-                    <?php if ($rol === 'cliente' || $rol === 'administrador'): ?>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="card-title">Crear Nuevo Ticket</h5>
-                                </div>
-                                <div class="card-body">
-                                    <form action="<?php echo base_url('crear_ticket'); ?>" method="post" enctype="multipart/form-data">
-                                        <div class="mb-3">
-                                            <label for="titulo" class="form-label">Título</label>
-                                            <input type="text" class="form-control" id="titulo" name="titulo" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="descripcion" class="form-label">Descripción</label>
-                                            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="prioridad" class="form-label">Prioridad</label>
-                                            <select class="form-control" id="prioridad" name="prioridad" required>
-                                                <option value="baja">Baja</option>
-                                                <option value="media">Media</option>
-                                                <option value="alta">Alta</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="categoria_nombre" class="form-label">Categoría</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" id="categoria_nombre" name="categoria_nombre" placeholder="Escribe una nueva categoría o selecciona una existente" list="categorias_list" required>
-                                                <datalist id="categorias_list">
-                                                    <?php foreach ($categorias as $categoria): ?>
-                                                    <option value="<?php echo esc($categoria['nombre']); ?>">
-                                                    <?php endforeach; ?>
-                                                </datalist>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="adjuntos" class="form-label">Adjuntos (opcional, máx. 6MB, jpg, png, pdf)</label>
-                                            <input type="file" class="form-control" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Crear Ticket</button>
-                                    </form>
-                                </div>
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <a href="<?php echo base_url('crear_ticket'); ?>" class="btn btn-primary">Crear Ticket</a>
                         </div>
                     </div>
-                    <?php endif; ?>
                     <!-- Filtros de Búsqueda -->
                     <div class="row">
                         <div class="col-md-12">
@@ -277,7 +222,7 @@
         <!-- Footer -->
         <footer class="app-footer">
             <div class="float-end d-none d-sm-inline">SGT v1.0</div>
-            <strong>Copyright © 2025 <a href="#">Tu Empresa</a>.</strong> Todos los derechos reservados.
+            <strong>Copyright © 2025 <a href="https://techmeetings.net/">TechMeetings</a>.</strong> Todos los derechos reservados.
         </footer>
     </div>
     <!-- Scripts -->

@@ -15,7 +15,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <!-- AdminLTE -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/dist/css/adminlte.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/dist/css/adminlte.css'); ?>">
     <!-- Chart.js -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
     <!-- Estilos personalizados para evitar diseño "chiquito" -->
@@ -83,22 +83,22 @@
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item menu-open">
-                            <a href="<?php echo base_url('dashboard'); ?>" class="nav-link active">
+                        <li class="nav-item">
+                            <a href="<?php echo base_url('dashboard'); ?>" class="nav-link">
                                 <i class="nav-icon bi bi-speedometer"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <?php if ($rol === 'administrador'): ?>
+                        <?php if ($rol === 'administrador' || $rol === 'supervisor'): ?>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="<?php echo base_url('crear_usuario'); ?>" class="nav-link">
                                 <i class="nav-icon bi bi-person-fill"></i>
                                 <p>Gestionar Usuarios</p>
                             </a>
                         </li>
                         <?php endif; ?>
-                        <li class="nav-item">
-                            <a href="<?php echo base_url('tickets'); ?>" class="nav-link">
+                        <li class="nav-item menu-open">
+                            <a href="<?php echo base_url('tickets'); ?>" class="nav-link active">
                                 <i class="nav-icon bi bi-ticket-fill"></i>
                                 <p>Tickets</p>
                             </a>
@@ -249,8 +249,9 @@
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Título</th>
-                                                    <th>Área</th>
+                                                    <th>Categoria</th>
                                                     <th>Estado</th>
+                                                    <th>Agente</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -307,7 +308,8 @@
                                                     <td>Juan Pérez</td>
                                                     <td>juan@empresa.com</td>
                                                     <td>Administrador</td>
-                                                    <td><a href="#" class="btn btn-sm btn-warning">Editar</a></td>
+                                                    <td><a href="#" class="btn btn-sm btn-warning">Editar</a>
+                                                    <a></a><a href="#" class="btn btn-sm btn-danger">Eliminar</a></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -377,6 +379,7 @@
                     <?php endif; ?>
                 </div>
             </div>
+
         </main>
         <!-- Footer -->
         <footer class="app-footer">
@@ -385,10 +388,10 @@
         </footer>
     </div>
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo base_url('assets/dist/js/adminlte.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/dist/js/adminlte.js'); ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script>
         // Configurar OverlayScrollbars
@@ -409,6 +412,7 @@
                     },
                 });
             }
+      
             // Configurar Chart.js (solo si el gráfico está presente)
             const chartElement = document.getElementById('ticketsChart');
             if (chartElement) {

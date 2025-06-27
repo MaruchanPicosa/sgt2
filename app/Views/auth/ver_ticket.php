@@ -69,9 +69,9 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <?php if ($rol === 'administrador'): ?>
+                        <?php if ($rol === 'administrador'|| $rol === 'supervisor'): ?>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="<?php echo base_url('crear_usuario'); ?>" class="nav-link">
                                 <i class="nav-icon bi bi-person-fill"></i>
                                 <p>Gestionar Usuarios</p>
                             </a>
@@ -207,7 +207,7 @@
         <!-- Footer -->
         <footer class="app-footer">
             <div class="float-end d-none d-sm-inline">SGT v1.0</div>
-            <strong>Copyright © 2025 <a href="#">Tu Empresa</a>.</strong> Todos los derechos reservados.
+            <strong>Copyright © 2025 <a href="https://techmeetings.net/">TechMeetings</a>.</strong> Todos los derechos reservados.
         </footer>
     </div>
     <!-- Scripts -->
