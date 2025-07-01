@@ -145,7 +145,7 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="<?php echo base_url('dashboard'); ?>" class="brand-link">
-                    <img src="<?php echo base_url('assets/dist/img/AdminLTELogo.png'); ?>" alt="SGT Logo" class="brand-image opacity-75 shadow">
+                    <img src="<?php echo base_url('assets/dist/assets/img/standex.png'); ?>" alt="SGT Logo" class="brand-image ">
                     <span class="brand-text fw-light">SGT</span>
                 </a>
             </div>
@@ -274,17 +274,16 @@
                                             <h3 class="card-title">Crear Nuevo Ticket</h3>
                                         </div>
                                         <div class="card-body">
-                                            <form id="ticketForm" action="<?php echo base_url('crear_ticket'); ?>" method="post" enctype="multipart/form-data">
-                                                <div class="form-group">
-                                                    <input class="form-control" placeholder="De:" name="to" id="to" required>
+                                            <form action="<?php echo base_url('crear_ticket'); ?>" method="post" enctype="multipart/form-data">
+                                                <div class="mb-3">
+                                                    <label for="titulo" class="form-label">Título</label>
+                                                    <input type="text" class="form-control" id="titulo" name="titulo" required>
                                                 </div>
-                                                <div class="form-group">
-                                                    <input class="form-control" placeholder="Título del Ticket:" name="titulo" id="titulo" required>
+                                                <div class="mb-3">
+                                                    <label for="descripcion" class="form-label">Descripción</label>
+                                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
                                                 </div>
-                                                <div class="form-group">
-                                                    <textarea id="compose-textarea" class="form-control" name="descripcion" style="height: 300px" required></textarea>
-                                                </div>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <label for="prioridad" class="form-label">Prioridad</label>
                                                     <select class="form-control" id="prioridad" name="prioridad" required>
                                                         <option value="baja">Baja</option>
@@ -292,29 +291,22 @@
                                                         <option value="alta">Alta</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <label for="categoria_nombre" class="form-label">Categoría</label>
-                                                    <input type="text" class="form-control" id="categoria_nombre" name="categoria_nombre" placeholder="Escribe o selecciona una categoría" list="categorias_list" required>
-                                                    <datalist id="categorias_list">
-                                                        <?php foreach ($categorias as $categoria): ?>
-                                                        <option value="<?php echo esc($categoria['nombre']); ?>">
-                                                        <?php endforeach; ?>
-                                                    </datalist>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="btn btn-default btn-file">
-                                                        <i class="fas fa-paperclip"></i> Adjunto
-                                                        <input type="file" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="categoria_nombre" name="categoria_nombre" placeholder="Escribe una nueva categoría o selecciona una existente" list="categorias_list" required>
+                                                        <datalist id="categorias_list">
+                                                            <?php foreach ($categorias as $categoria): ?>
+                                                            <option value="<?php echo esc($categoria['nombre']); ?>">
+                                                            <?php endforeach; ?>
+                                                        </datalist>
                                                     </div>
-                                                    <p class="help-block">Max. 6MB (jpg, png, pdf)</p>
                                                 </div>
-                                                <div class="card-footer">
-                                                    <div class="float-right">
-                                                        <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i> Enviar</button>
-                                                    </div>
-                                                    <button type="button" class="btn btn-default" id="editBtn"><i class="fas fa-pencil-alt"></i> Editar</button>
-                                                    <button type="button" class="btn btn-default" id="deleteBtn"><i class="fas fa-times"></i> Eliminar</button>
+                                                <div class="mb-3">
+                                                    <label for="adjuntos" class="form-label">Adjuntos (opcional, máx. 6MB, jpg, png, pdf)</label>
+                                                    <input type="file" class="form-control" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf">
                                                 </div>
+                                                <button type="submit" class="btn btn-primary">Crear Ticket</button>
                                             </form>
                                         </div>
                                     </div>
@@ -328,7 +320,7 @@
         <!-- Footer -->
         <footer class="app-footer">
             <div class="float-end d-none d-sm-inline">SGT v1.0</div>
-            <strong>Copyright © 2025 <a href="https://techmeetings.net/">TechMeetings</a>.</strong> Todos los derechos reservados.
+                <strong>Copyright © 2025 <a href="https://techmeetings.net/">TechMeetings</a>.</strong> Todos los derechos reservados.
         </footer>
         <!-- Control Sidebar -->
     </div>
@@ -341,47 +333,25 @@
     <script src="<?php echo base_url('assets/dist/js/adminlte.js'); ?>"></script>
     <!-- Page specific script -->
     <script>
-    $(function () {
-        // Inicializar Summernote
-        $('#compose-textarea').summernote({
-            height: 300,
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture']]
-            ]
-        });
-
-        // Funcionalidad de los botones
-        let isEditable = false;
-
-        $('#editBtn').click(function() {
-            if (!isEditable) {
-                $('input, select, #compose-textarea').prop('disabled', false);
-                $(this).html('<i class="fas fa-save"></i> Guardar Cambios');
-                isEditable = true;
-            } else {
-                // Guardar cambios (simulación)
-                $('#ticketForm').submit();
-                $('input, select, #compose-textarea').prop('disabled', true);
-                $(this).html('<i class="fas fa-pencil-alt"></i> Editar');
-                isEditable = false;
+     // Configurar OverlayScrollbarsMore actions
+        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        const Default = {
+            scrollbarTheme: 'os-theme-light',
+            scrollbarAutoHide: 'leave',
+            scrollbarClickScroll: true
+        };
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (sidebarWrapper && typeof OverlayScrollbars !== 'undefined') {
+                OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: Default.scrollbarTheme,
+                        autoHide: Default.scrollbarAutoHide,
+                        clickScroll: Default.scrollbarClickScroll
+                    }
+                });
             }
         });
-
-        $('#saveDraft').click(function() {
-            $('#ticketForm').attr('action', '<?php echo base_url('guardar_borrador'); ?>');
-            $('#ticketForm').append('<input type="hidden" name="estado" value="borrador">');
-            $('#ticketForm').submit();
-        });
-
-        $('#deleteBtn').click(function() {
-            if (confirm('¿Estás seguro de que deseas eliminar este ticket?')) {
-                $('#ticketForm')[0].reset(); // Reinicia el formulario
-                alert('Ticket eliminado (simulación).');
-            }
-        });
-    });
     </script>
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"94f416d79db9f052","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2025.6.2","token":"2437d112162f4ec4b63c3ca0eb38fb20"}' crossorigin="anonymous"></script>
 </body>

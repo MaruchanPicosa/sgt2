@@ -173,7 +173,8 @@
                         <div class="col-md-12">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h5 class="card-title"><?php echo $rol === 'cliente' ? 'Mis Tickets' : ($rol === 'agente' ? 'Tickets Asignados' : 'Todos los Tickets'); ?></h5>
+                                    <h5 class="card-title"><?php echo $rol === 'cliente' ? 'Mis Tickets' : ($rol === 'agente'? 'Tickets Asignados' : 'Todos los Tickets'); ?></h5>
+            
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -213,6 +214,48 @@
                                         </table>
                                     </div>
                                 </div>
+                                <!--<div class="card-header">
+                                    <h5 class="card-title"><?php echo $rol === 'agente' ? 'Tickets sin Asignar' :''; ?></h5>
+            
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Título</th>
+                                                    <th>Categoría</th>
+                                                    <th>Prioridad</th>
+                                                    <th>Estado</th>
+                                                    <?php if ($rol === 'supervisor' || $rol === 'administrador'): ?>
+                                                    <th>Agente</th>
+                                                    <?php endif; ?>
+                                                    <th>Creado</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($tickets as $ticket): ?>
+                                                <tr>
+                                                    <td><?php echo substr($ticket['id'], 0, 8); ?>...</td>
+                                                    <td><?php echo esc($ticket['titulo']); ?></td>
+                                                    <td><?php echo esc($ticket['categoria_nombre']); ?></td>
+                                                    <td><?php echo ucfirst($ticket['prioridad']); ?></td>
+                                                    <td><span class="badge text-bg-<?php echo $ticket['estado'] === 'abierto' ? 'primary' : ($ticket['estado'] === 'en_progreso' ? 'warning' : ($ticket['estado'] === 'cerrado' ? 'success' : ($ticket['estado'] === 'reabierto' ? 'info' : 'secondary'))); ?>"><?php echo ucfirst(str_replace('_', ' ', $ticket['estado'])); ?></span></td>
+                                                    <?php if ($rol === 'supervisor' || $rol === 'administrador'): ?>
+                                                    <td><?php echo $ticket['agente_nombre'] ?: 'Sin asignar'; ?></td>
+                                                    <?php endif; ?>
+                                                    <td><?php echo date('d/m/Y', strtotime($ticket['creado_en'])); ?></td>
+                                                    <td>
+                                                        <a href="<?php echo base_url('ver_ticket/' . $ticket['id']); ?>" class="btn btn-sm btn-primary">Ver</a>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

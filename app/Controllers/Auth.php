@@ -121,10 +121,15 @@ class Auth extends BaseController
         $usuarioModel = new UsuarioModel();
         $data = ['nombre' => session()->get('nombre'), 'rol' => session()->get('rol'), 'usuarios' => $usuarioModel->findAll()];
         if ($this->request->is('post')) {
-            $rules = ['nombre' => 'required|min_length[3]', 'correo' => 'required|valid_email|is_unique[usuarios.correo]', 'contrasena' => 'required|min_length[8]', 'rol' => 'required|in_list[cliente,agente,supervisor,administrador]'];
+            $rules = ['nombre' => 'required|min_length[3]', 'correo' => 'required|valid_email|is_unique[usuarios.correo]', 
+            'contrasena' => 'required|min_length[8]', 'rol' => 'required|in_list[cliente,agente,supervisor,administrador]'];
+
             if ($this->validate($rules)) {
                 $model = new UsuarioModel();
-                $data = ['nombre' => $this->request->getPost('nombre'), 'correo' => $this->request->getPost('correo'), 'contrasena' => password_hash($this->request->getPost('contrasena'), PASSWORD_BCRYPT), 'rol' => $this->request->getPost('rol'), 'creado_en' => date('Y-m-d H:i:s')];
+                $data = ['nombre' => $this->request->getPost('nombre'), 'correo' => $this->request->getPost('correo'), 
+                'contrasena' => password_hash($this->request->getPost('contrasena'), PASSWORD_BCRYPT), 'rol' => $this->request->getPost('rol'), 
+                'creado_en' => date('Y-m-d H:i:s')];
+
                 if ($model->insert($data)) {
                     session()->setFlashdata('success', 'Usuario creado correctamente.');
                     return redirect()->to('crear_usuario');
@@ -230,6 +235,7 @@ class Auth extends BaseController
             $data['tickets'] = $ticketModel->getTicketsByUsuario($user_id);
         } elseif ($rol === 'agente') {
             $data['tickets'] = $ticketModel->getTicketsByAgente($user_id);
+         
         } elseif ($rol === 'supervisor' || $rol === 'administrador') {
             $data['tickets'] = $ticketModel->getAllTickets();
         }
@@ -250,7 +256,7 @@ class Auth extends BaseController
 
    public function crear_ticket()
     {
-        if (!session()->get('isLoggedIn') || !in_array(session()->get('rol'), ['cliente', 'administrador'])) {
+        if (!session()->get('isLoggedIn') || !in_array(session()->get('rol'), ['cliente','agente', 'administrador'])) {
             return redirect()->to('tickets')->with('error', 'Acceso denegado.');
         }
 
@@ -284,7 +290,7 @@ class Auth extends BaseController
                     'id' => $ticket_id,
                     'id_usuario' => $user_id,
                     'titulo' => $this->request->getPost('titulo'),
-                    'descripcion' => html_entity_decode($this->request->getPost('descripcion')), // Preservar HTML
+                    'descripcion' => $this->request->getPost('descripcion'), 
                     'prioridad' => $this->request->getPost('prioridad'),
                     'id_categoria' => $id_categoria,
                     'estado' => 'abierto'
@@ -296,19 +302,12 @@ class Auth extends BaseController
                         // Manejar adjuntos (si los hay)
                         $files = $this->request->getFiles();
                         if ($files && isset($files['adjuntos']) && !empty($files['adjuntos'])) {
-                            $comentario_id = $ticketModel->addComentario([
-                                'id_ticket' => $ticket_id,
-                                'id_usuario' => $user_id,
-                                'comentario' => '', // Comentario vacío o elimina esta línea si no quieres comentarios
-                                'es_interno' => 0
-                            ]);
-
                             foreach ($files['adjuntos'] as $file) {
                                 if ($file->isValid() && !$file->hasMoved()) {
                                     $newName = $file->getRandomName();
                                     $file->move(ROOTPATH . 'public/uploads/tickets', $newName);
                                     $adjuntoData = [
-                                        'id_comentario_ticket' => $comentario_id,
+                                        'id_ticket' => $ticket_id, // Asociar al ticket directamente
                                         'ruta_archivo' => 'uploads/tickets/' . $newName,
                                         'nombre_archivo' => $file->getClientName(),
                                         'tipo_archivo' => $file->getClientMimeType()
@@ -344,33 +343,7 @@ class Auth extends BaseController
                 session()->setFlashdata('error', $this->validator->listErrors());
             }
         }
-
         return view('auth/crear_ticket', $data);
-    }
-
-    public function guardar_borrador()
-    {
-        if (!$this->request->is('post')) {
-            return redirect()->to('editor');
-        }
-
-        $data = [
-            'titulo' => $this->request->getPost('titulo'),
-            'descripcion' => $this->request->getPost('descripcion'),
-            'prioridad' => $this->request->getPost('prioridad'),
-            'categoria_nombre' => $this->request->getPost('categoria_nombre'),
-            'usuario_id' => session()->get('user_id'),
-            'estado' => 'borrador'
-        ];
-
-        $ticketModel = new \App\Models\TicketModel();
-        if ($ticketModel->save($data)) {
-            session()->setFlashdata('success', 'Borrador guardado exitosamente.');
-        } else {
-            session()->setFlashdata('error', 'Error al guardar el borrador.');
-        }
-
-       return view('auth/crear_ticket', $data);
     }
 
     public function ver_ticket($ticket_id)
@@ -403,7 +376,25 @@ class Auth extends BaseController
                     'comentario' => $this->request->getPost('comentario'),
                     'es_interno' => $es_interno
                 ];
-                
+
+                // Insertar el comentario
+                if ($ticketModel->addComentario($comentarioData)) {
+                    $db = \Config\Database::connect();
+                    $db->table('registros_auditoria')->insert([
+                        'id_usuario' => $user_id,
+                        'accion' => 'añadir_comentario',
+                        'modelo' => 'comentarios_tickets',
+                        'id_registro' => $ticket_id,
+                        'detalles' => json_encode($comentarioData),
+                        'direccion_ip' => $this->request->getIPAddress()
+                    ]);
+                    session()->setFlashdata('success', 'Comentario agregado correctamente.');
+                } else {
+                    session()->setFlashdata('error', 'Error al agregar el comentario.');
+                }
+
+                // Redirigir para actualizar la vista
+                return redirect()->to("ver_ticket/$ticket_id");
             } else {
                 session()->setFlashdata('error', $this->validator->listErrors());
             }
@@ -428,7 +419,6 @@ class Auth extends BaseController
 
         return view('auth/ver_ticket', $data);
     }
-
     public function logout()
     {
         session()->destroy();

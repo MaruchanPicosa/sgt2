@@ -37,7 +37,19 @@ class TicketModel extends Model
                     ->join('categorias', 'categorias.id = tickets.id_categoria')
                     ->select('tickets.*, categorias.nombre as categoria_nombre')
                     ->findAll();
-    }
+            
+            /*$asigando = $this->where('asignado_a', $agente_id)
+                    ->join('categorias', 'categorias.id = tickets.id_categoria')
+                    ->select('tickets.*, categorias.nombre as categoria_nombre')
+                    ->findAll();
+
+        $sinAsignar = $this->where('asignado_a', null)
+                    ->join('categorias', 'categorias.id = tickets.id_categoria')
+                    ->select('tickets.*, categorias.nombre as categoria_nombre')
+                    ->findAll();
+
+        return array_merge($asigando, $sinAsignar); */
+    }   
 
     public function getAllTickets()
     {

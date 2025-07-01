@@ -35,6 +35,7 @@
         .table {
             font-size: 0.9rem; /* Tamaño legible para tablas */
         }
+       
     </style>
 </head>
 <body class="layout-fixed sidebar-expand-md bg-body-tertiary">
@@ -53,12 +54,12 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="<?php echo base_url('assets/dist/img/user2-160x160.jpg'); ?>" class="user-image rounded-circle shadow" alt="User Image">
+                            <img src="<?php echo base_url('assets/dist/assets/img/user2-160x160.jpg'); ?>" class="user-image rounded-circle shadow" alt="User Image">
                             <span class="d-none d-md-inline"><?php echo esc($nombre); ?> (<?php echo ucfirst($rol); ?>)</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li class="user-header text-bg-primary">
-                                <img src="<?php echo base_url('assets/dist/img/user2-160x160.jpg'); ?>" class="rounded-circle shadow" alt="User Image">
+                                <img src="<?php echo base_url('assets/dist/assets/img/user2-160x160.jpg'); ?>" class="rounded-circle shadow" alt="User Image">
                                 <p>
                                     <?php echo esc($nombre); ?> - <?php echo ucfirst($rol); ?>
                                     <small>Miembro desde <?php echo date('M. Y'); ?></small>
@@ -76,7 +77,7 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="<?php echo base_url('dashboard'); ?>" class="brand-link">
-                    <img src="<?php echo base_url('assets/dist/img/AdminLTELogo.png'); ?>" alt="SGT Logo" class="brand-image opacity-75 shadow">
+                    <img src="<?php echo base_url('assets/dist/assets/img/standex.png'); ?>" alt="SGT Logo" class="brand-image" >
                     <span class="brand-text fw-light">SGT</span>
                 </a>
             </div>
