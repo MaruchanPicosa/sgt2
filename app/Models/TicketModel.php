@@ -37,19 +37,15 @@ class TicketModel extends Model
                     ->join('categorias', 'categorias.id = tickets.id_categoria')
                     ->select('tickets.*, categorias.nombre as categoria_nombre')
                     ->findAll();
-            
-            /*$asigando = $this->where('asignado_a', $agente_id)
+    }
+
+    public function getTicketsSinAsignar()
+    {
+        return $this->where('asignado_a IS NULL')
                     ->join('categorias', 'categorias.id = tickets.id_categoria')
                     ->select('tickets.*, categorias.nombre as categoria_nombre')
                     ->findAll();
-
-        $sinAsignar = $this->where('asignado_a', null)
-                    ->join('categorias', 'categorias.id = tickets.id_categoria')
-                    ->select('tickets.*, categorias.nombre as categoria_nombre')
-                    ->findAll();
-
-        return array_merge($asigando, $sinAsignar); */
-    }   
+    }
 
     public function getAllTickets()
     {
@@ -91,6 +87,7 @@ class TicketModel extends Model
     public function addComentario($data)
     {
         $db = \Config\Database::connect();
+        $data['creado_en'] = date('Y-m-d H:i:s');
         $db->table('comentarios_tickets')->insert($data);
         return $db->insertID();
     }
@@ -113,16 +110,11 @@ class TicketModel extends Model
         $categoria = $db->table('categorias')->where('nombre', $nombre)->get()->getRowArray();
 
         if (!$categoria) {
-            $data = [
-                'nombre' => $nombre,
-                'descripcion' => 'Categoría creada por usuario'
-            ];
+            $data = ['nombre' => $nombre, 'descripcion' => 'Categoría creada por usuario'];
             $db->table('categorias')->insert($data);
             $categoria = $db->table('categorias')->where('id', $db->insertID())->get()->getRowArray();
         }
 
         return $categoria['id'];
     }
-
-    
 }

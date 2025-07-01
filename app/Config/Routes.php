@@ -31,6 +31,12 @@ $routes->get('registrar/', 'Auth::register');
 
 $routes->post('editar_usuario/(:segment)', 'Auth::editar_usuario/$1');
 $routes->get('eliminar_usuario/(:segment)', 'Auth::eliminar_usuario/$1');
+$routes->post('eliminar_usuario/(:segment)', 'Auth::eliminar_usuario/$1');
+
+
 $routes->get('editar_usuario/(:segment)', 'Auth::editar_usuario/$1');
-$routes->get('eliminar_ticket/(:segment)', 'Auth::eliminar_ticket/$1');
+$routes->get('asignar_ticket/(:segment)', 'Auth::asignar_ticket/$1');
+$routes->post('asignar_ticket/(:segment)', 'Auth::asignar_ticket/$1');
+
+
 
