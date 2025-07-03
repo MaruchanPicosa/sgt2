@@ -6,22 +6,20 @@
     <title>SGT - Editor</title>
     <meta name="author" content="Tu Nombre">
     <meta name="description" content="Sistema Gestor de Tickets - Crear Ticket">
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Fuentes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css">
+    <!-- OverlayScrollbars -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/icheck-bootstrap/icheck-bootstrap.css'); ?>">
     <!-- Theme style -->
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <!-- summernote -->
-    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/summernote/summernote-bs4.min.css">
+    <!-- AdminLTE -->
     <link rel="stylesheet" href="<?php echo base_url('assets/dist/css/adminlte.css'); ?>">
-   
 </head>
 <body class="layout-fixed sidebar-expand-md bg-body-tertiary">
     <div class="app-wrapper">
@@ -34,7 +32,9 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">SGT</a></li>
+                    <li class="nav-item d-none d-md-block">
+                        <a href="#" class="nav-link">SGT</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown user-menu">
@@ -62,8 +62,8 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="<?php echo base_url('dashboard'); ?>" class="brand-link">
-                    <img src="<?php echo base_url('assets/dist/assets/img/standex.png'); ?>" alt="SGT Logo" class="brand-image ">
-                    <span class="brand-text ">SGT</span>
+                    <img src="<?php echo base_url('assets/dist/assets/img/standex.png'); ?>" alt="SGT Logo" class="brand-image">
+                    <span class="brand-text">SGT</span>
                 </a>
             </div>
             <div class="sidebar-wrapper">
@@ -75,7 +75,7 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <?php if ($rol === 'administrador'|| $rol === 'supervisor'): ?>
+                        <?php if ($rol === 'administrador' || $rol === 'supervisor'): ?>
                         <li class="nav-item">
                             <a href="<?php echo base_url('crear_usuario'); ?>" class="nav-link">
                                 <i class="nav-icon bi bi-person-fill"></i>
@@ -84,7 +84,7 @@
                         </li>
                         <?php endif; ?>
                         <li class="nav-item menu-open">
-                            <a href="<?php echo base_url('tickets'); ?>" class="nav-link">
+                            <a href="<?php echo base_url('tickets'); ?>" class="nav-link active">
                                 <i class="nav-icon bi bi-ticket-fill"></i>
                                 <p>Tickets</p>
                             </a>
@@ -99,26 +99,21 @@
                 </nav>
             </div>
         </aside>
-        <!-- Content Wrapper -->
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>Editor</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="<?php echo base_url('tickets'); ?>">Tickets</a></li>
-                            <li class="breadcrumb-item active">Editor</li>
-                        </ol>
+        <!-- Main Content -->
+        <main class="app-main">
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6"><h3 class="mb-0">Editor</h3></div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a href="<?php echo base_url('tickets'); ?>">Tickets</a></li>
+                                <li class="breadcrumb-item active">Editor</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
-            </div><!-- /.container-fluid -->
-        </section>
-
-        <!-- Main content -->
-        <main class="app-content">
+            </div>
             <section class="content">
                 <div class="app-content">
                     <div class="container-fluid">
@@ -222,7 +217,6 @@
                                             <div class="mb-3">
                                                 <label for="adjuntos" class="form-label">Adjuntos (opcional, máx. 6MB, jpg, png, pdf)</label>
                                                 <input type="file" class="form-control" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf">
-                                                 
                                             </div>
                                             <button type="submit" class="btn btn-primary">Crear Ticket</button>
                                         </form>
@@ -233,25 +227,21 @@
                     </div>
                 </div>
             </section>
+            <!-- Footer -->
+            <footer class="app-footer">
+                <div class="float-end d-none d-sm-inline">SGT v1.0</div>
+                <strong>Copyright © 2025 <a href="https://techmeetings.net/">TechMeetings</a>.</strong> Todos los derechos reservados.
+            </footer>
         </main>
     </div>
-    <!-- Footer -->
-    <footer class="app-footer">
-        <div class="float-end d-none d-sm-inline">SGT v1.0</div>
-            <strong>Copyright © 2025 <a href="https://techmeetings.net/">TechMeetings</a>.</strong> Todos los derechos reservados.
-    </footer>
-    <!-- Control Sidebar -->
 
     <!-- Scripts -->
     <script src="https://adminlte.io/themes/v3/plugins/jquery/jquery.min.js"></script>
     <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://adminlte.io/themes/v3/dist/js/adminlte.min.js?v=3.2.0"></script>
-    <script src="https://adminlte.io/themes/v3/plugins/summernote/summernote-bs4.min.js"></script>
-    <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script>
     <script src="<?php echo base_url('assets/dist/js/adminlte.js'); ?>"></script>
     <!-- Page specific script -->
     <script>
-     // Configurar OverlayScrollbarsMore actions
         const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
         const Default = { scrollbarTheme: 'os-theme-light', scrollbarAutoHide: 'leave', scrollbarClickScroll: true };
         document.addEventListener('DOMContentLoaded', function () {
@@ -260,19 +250,12 @@
                 OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, { scrollbars: { theme: Default.scrollbarTheme, autoHide: Default.scrollbarAutoHide, clickScroll: Default.scrollbarClickScroll } });
             }
         });
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (sidebarWrapper && typeof OverlayScrollbars !== 'undefined') {
-                OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll
-                    }
-                });
-            }
+        setTimeout(function() {
+        let flashMessages = document.querySelectorAll('.alert');
+        flashMessages.forEach(function(message) {
+            message.style.display = 'none';
         });
-        
+    }, 5000); // 5000 ms = 5 segundos
     </script>
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"94f416d79db9f052","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2025.6.2","token":"2437d112162f4ec4b63c3ca0eb38fb20"}' crossorigin="anonymous"></script>
 </body>

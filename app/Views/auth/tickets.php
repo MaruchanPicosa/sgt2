@@ -80,19 +80,24 @@
             </div>
         </aside>
         <!-- Main Content -->
-        <main class="app-content">
+        <main class="app-main">
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6"><h3 class="mb-0">Tickets</h3></div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a  href="<?php echo base_url('dashboard'); ?>">SGT</a></li>
+                                <li class="breadcrumb-item active">Tickets</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <section class="content">
                 <div class="app-content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-sm-6"><h3 class="mb-0">Tickets</h3></div>
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-end">
-                                    <li class="breadcrumb-item"><a href="<?php echo base_url('dashboard'); ?>">SGT</a></li>
-                                    <li class="breadcrumb-item active">Tickets</li>
-                                </ol>
-                            </div>
-                            
                             <!-- Filtros de Búsqueda -->
                             <div class="col-md-3">
                                 <a href="<?php echo base_url('crear_ticket'); ?>" class="btn btn-primary btn-block mb-2"><i class="bi bi-plus-circle"></i> Crear Ticket</a>

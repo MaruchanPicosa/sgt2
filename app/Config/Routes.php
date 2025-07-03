@@ -32,11 +32,16 @@ $routes->get('registrar/', 'Auth::register');
 $routes->post('editar_usuario/(:segment)', 'Auth::editar_usuario/$1');
 $routes->get('eliminar_usuario/(:segment)', 'Auth::eliminar_usuario/$1');
 $routes->post('eliminar_usuario/(:segment)', 'Auth::eliminar_usuario/$1');
-
-
 $routes->get('editar_usuario/(:segment)', 'Auth::editar_usuario/$1');
 $routes->get('asignar_ticket/(:segment)', 'Auth::asignar_ticket/$1');
 $routes->post('asignar_ticket/(:segment)', 'Auth::asignar_ticket/$1');
+
+$routes->post('editar_ticket/(:segment)', 'Auth::editar_ticket/$1'); // Nueva ruta para edición con POST
+$routes->get('editar_ticket/(:segment)', 'Auth::editar_ticket/$1');
+$routes->get('eliminar_ticket/(:segment)', 'Auth::eliminar_ticket/$1');
+$routes->post('eliminar_ticket/(:segment)', 'Auth::eliminar_ticket/$1');
+$routes->get('ver_ticket/(:segment)', 'Auth::ver_ticket/$1');
+$routes->post('ver_ticket/(:segment)', 'Auth::ver_ticket/$1');
 
 
 
